@@ -4,20 +4,20 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 
 // 설정 및 데이터베이스
-const swaggerDocument = require('./src/config/swagger');
-const initDatabase = require('./src/database/init');
+const swaggerDocument = require('./config/swagger');
+const initDatabase = require('./database/init');
 
 // 라우터
-const sqlInjectionRoutes = require('./src/routes/sqlInjection');
-const xssRoutes = require('./src/routes/xss');
-const commandInjectionRoutes = require('./src/routes/commandInjection');
-const pathTraversalRoutes = require('./src/routes/pathTraversal');
-const idorRoutes = require('./src/routes/idor');
-const weakAuthRoutes = require('./src/routes/weakAuth');
-const dataExposureRoutes = require('./src/routes/dataExposure');
-const ssrfRoutes = require('./src/routes/ssrf');
-const massAssignmentRoutes = require('./src/routes/massAssignment');
-const insecureDeserializationRoutes = require('./src/routes/insecureDeserialization');
+const sqlInjectionRoutes = require('./routes/sqlInjection');
+const xssRoutes = require('./routes/xss');
+const commandInjectionRoutes = require('./routes/commandInjection');
+const pathTraversalRoutes = require('./routes/pathTraversal');
+const idorRoutes = require('./routes/idor');
+const weakAuthRoutes = require('./routes/weakAuth');
+const dataExposureRoutes = require('./routes/dataExposure');
+const ssrfRoutes = require('./routes/ssrf');
+const massAssignmentRoutes = require('./routes/massAssignment');
+const insecureDeserializationRoutes = require('./routes/insecureDeserialization');
 
 const app = express();
 const PORT = 3000;
@@ -29,7 +29,7 @@ const db = initDatabase();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Swagger UI 설정
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

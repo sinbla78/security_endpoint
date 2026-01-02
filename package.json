@@ -2,9 +2,9 @@
   "name": "swagger_game",
   "version": "1.0.0",
   "description": "Simple Swagger UI example",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node src/server.js"
   },
   "keywords": [
     "swagger",

